@@ -1,0 +1,37 @@
+# Copy to drm_wrapper.conf next to DRM_Wrapper (or wherever
+# kConfigPath points) and adjust for your deployment. Every key has a
+# built-in fallback (see main.cpp) -- this file only needs to list the keys
+# you actually want to override.
+
+# Path to state.bin, relative to DRM_Wrapper's working directory.
+state_path = state.bin
+
+# Path to the protected application's jar.
+quark_jar_path = quark.jar
+
+# Overrides the compiled-in jar_digest.hpp hash (hex-encoded SHA-256, 64 hex
+# chars) if set. Leave unset in production -- this exists so a test build can
+# point at a throwaway file with a hash that doesn't match any real quark.jar.
+# quark_jar_sha256_hex = <64 hex chars>
+
+# Path to the JVM (or JVM stand-in, e.g. handoff_spy for testing) to launch,
+# and any arguments after it. Windows example: jre\bin\javaw.exe; POSIX
+# example: jre/bin/java.
+jvm_path = jre/bin/java
+jvm_args = -cp quark.jar:main.jar quark.drmcore.Bootstrap
+
+# Heartbeat timing for the post-launch challenge-response loop (see
+# CLAUDE.md rule 4's "mutual assured destruction by pipe coupling"). Leave
+# at the defaults in production -- shortening these only makes sense for
+# fast, deterministic automated testing (e.g. drm_wrapper_robustness_test).
+challenge_interval_ms = 30000
+challenge_timeout_ms = 10000
+
+# macOS/Linux only -- the two xattr-backed witness channels both live on one
+# host file (the ADS-equivalent design; see CLAUDE.md's witness-channel
+# table), distinguished by attribute name. The third witness channel is
+# always the portable FileWitnessStore below.
+witness_xattr_host_path = quark_witness_host.bin
+witness_xattr1_attr = com.quark.witness1
+witness_xattr2_attr = com.quark.witness2
+witness_file_path = quark_witness_file.bin

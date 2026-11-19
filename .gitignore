@@ -1,0 +1,75 @@
+# -----------------------------------------------------------------------
+# Build & test artifacts
+# -----------------------------------------------------------------------
+# All real build/test activity happens under sandbox/ (CLAUDE.md rule 1) --
+# nothing under it is ever meant to be tracked.
+/sandbox/
+
+# Defensive: ignore Gradle/CMake build output even if it ever lands
+# somewhere other than sandbox/ (it shouldn't, per the sandbox-only rule, but
+# this repo has already had stray build/ dirs at module roots before).
+# Anchored to exactly "<module-root>/build/" (root, or one/two path segments
+# deep, matching cpp/<module>/, java/<module>/, tools/<module>/) --
+# deliberately NOT a bare "build/" pattern: that previously swallowed real
+# source silently, because tools/quark-build's Java package is named
+# "quark.build" (tools/quark-build/src/main/java/quark/build/QuarkBuild.java)
+# and an unanchored pattern matches a directory named "build" at ANY depth.
+/build/
+/*/build/
+/*/*/build/
+cmake-build-*/
+.gradle/
+compile_commands.json
+
+# Compiled/binary output
+*.o
+*.obj
+*.exe
+*.dll
+*.dylib
+*.so
+*.a
+*.lib
+*.class
+*.jar
+
+# -----------------------------------------------------------------------
+# Stray license/crypto artifacts from manual local runs
+# -----------------------------------------------------------------------
+# These must only ever exist under sandbox/; ignored here too so a manual
+# run at the repo root can never accidentally get committed.
+/hwid.json
+/state.bin
+/licenses.txt
+/kpriv.bin
+/unlock_keys.txt
+/core.enc
+/debug-crash.txt
+/test_license/
+/test_license2/
+
+# -----------------------------------------------------------------------
+# OS / editor cruft
+# -----------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+
+# Local Claude Code permission state is machine-specific, not project config.
+.claude/settings.local.json
+
+# -----------------------------------------------------------------------
+# Documentation scope
+# -----------------------------------------------------------------------
+# Root README.md and everything under docs/ (the project's real documentation
+# home) stay tracked. Inside a module (cpp/, java/, tools/), only that
+# module's own README.md is tracked -- no stray/duplicate docs living next to
+# source.
+cpp/**/*.md
+java/**/*.md
+tools/**/*.md
+!cpp/**/README.md
+!java/**/README.md
+!tools/**/README.md
